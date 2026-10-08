@@ -1,5 +1,9 @@
 # markuplint-pretenders-to-jsx-a11y-configs
 
+[![CI on main](https://github.com/mehm8128/markuplint-pretenders-to-jsx-a11y-configs/actions/workflows/main.yml/badge.svg)](https://github.com/mehm8128/markuplint-pretenders-to-jsx-a11y-configs/actions/workflows/main.yml)
+[![NPM Version](https://img.shields.io/npm/v/markuplint-pretenders-to-jsx-a11y-configs)](https://www.npmjs.com/package/markuplint-pretenders-to-jsx-a11y-configs)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 [markuplint](https://markuplint.dev) の Pretenders スキャン結果を、jsx-a11y の `settings["jsx-a11y"].components`(`{ コンポーネント名: "要素名" }`)に変換します。markuplint が検出した「コンポーネント → 実際にレンダリングされる要素」の対応を、次のリンターの jsx-a11y ルールでも使うためのものです。
 
 - [eslint-plugin-jsx-a11y](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y)(ESLint 9 まで)
@@ -26,24 +30,27 @@ pnpm add -D markuplint-pretenders-to-jsx-a11y-configs @markuplint/pretenders
 
 ```js
 // eslint.config.js
-import jsxA11yX from 'eslint-plugin-jsx-a11y-x';
-import tseslint from 'typescript-eslint';
+import jsxA11yX from "eslint-plugin-jsx-a11y-x";
+import tseslint from "typescript-eslint";
 
-import { scanForJsxA11yFlatConfig } from 'markuplint-pretenders-to-jsx-a11y-configs';
+import { scanForJsxA11yFlatConfig } from "markuplint-pretenders-to-jsx-a11y-configs";
 
 export default [
   {
-    files: ['**/*.tsx'],
-    languageOptions: { parser: tseslint.parser, parserOptions: { ecmaFeatures: { jsx: true } } },
-    plugins: { 'jsx-a11y-x': jsxA11yX },
+    files: ["**/*.tsx"],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: { ecmaFeatures: { jsx: true } },
+    },
+    plugins: { "jsx-a11y-x": jsxA11yX },
     rules: {
-      'jsx-a11y-x/anchor-is-valid': 'error',
-      'jsx-a11y-x/control-has-associated-label': 'error',
+      "jsx-a11y-x/anchor-is-valid": "error",
+      "jsx-a11y-x/control-has-associated-label": "error",
     },
   },
   await scanForJsxA11yFlatConfig({
-    files: ['src/components/**/*.tsx'],
-    settingsKey: 'jsx-a11y-x',
+    files: ["src/components/**/*.tsx"],
+    settingsKey: "jsx-a11y-x",
   }),
 ];
 ```
@@ -56,19 +63,19 @@ oxlint の JS/TS 設定ファイルは実験的機能で、Node.js 経由での�
 
 ```ts
 // oxlint.config.ts
-import { defineConfig } from 'oxlint';
+import { defineConfig } from "oxlint";
 
-import { scanForJsxA11y } from 'markuplint-pretenders-to-jsx-a11y-configs';
+import { scanForJsxA11y } from "markuplint-pretenders-to-jsx-a11y-configs";
 
 const { settings } = await scanForJsxA11y({
-  files: ['src/components/**/*.tsx'],
+  files: ["src/components/**/*.tsx"],
 });
 
 export default defineConfig({
-  plugins: ['react', 'jsx-a11y'],
+  plugins: ["react", "jsx-a11y"],
   rules: {
-    'jsx-a11y/anchor-is-valid': 'error',
-    'jsx-a11y/control-has-associated-label': 'error',
+    "jsx-a11y/anchor-is-valid": "error",
+    "jsx-a11y/control-has-associated-label": "error",
   },
   settings,
 });
@@ -80,11 +87,11 @@ pnpm exec oxlint -c oxlint.config.ts src
 
 ### `scanForJsxA11y` のオプション
 
-| オプション | 説明 |
-| --- | --- |
-| `files` | スキャン対象のglob(`cwd` 基準) |
-| `cwd` | `files` の基準ディレクトリ。既定は `process.cwd()` |
-| `ignoreComponentNames` | 結果から除くコンポーネント名 |
+| オプション             | 説明                                               |
+| ---------------------- | -------------------------------------------------- |
+| `files`                | スキャン対象のglob(`cwd` 基準)                     |
+| `cwd`                  | `files` の基準ディレクトリ。既定は `process.cwd()` |
+| `ignoreComponentNames` | 結果から除くコンポーネント名                       |
 
 ### pretenders.json を変換する
 
@@ -96,9 +103,11 @@ pnpm exec markuplint-pretenders-to-jsx-a11y ./pretenders.json ./settings.json
 ```
 
 ```ts
-import { convertPretendersToJsxA11ySettings } from 'markuplint-pretenders-to-jsx-a11y-configs';
+import { convertPretendersToJsxA11ySettings } from "markuplint-pretenders-to-jsx-a11y-configs";
 
-const { settings, skipped } = convertPretendersToJsxA11ySettings(JSON.parse(json));
+const { settings, skipped } = convertPretendersToJsxA11ySettings(
+  JSON.parse(json),
+);
 ```
 
 出力された `settings` は、各リンターの設定の `settings` にそのままマージできます。この方法だと `pretenders.json` を再生成しないと古くなるので、CI や lint の前段で再生成してください。
@@ -107,7 +116,11 @@ const { settings, skipped } = convertPretendersToJsxA11ySettings(JSON.parse(json
 
 ```tsx
 export const Link = ({ href, children }) => <a href={href}>{children}</a>;
-export const IconButton = ({ label, icon }) => <button type="button" aria-label={label}>{icon}</button>;
+export const IconButton = ({ label, icon }) => (
+  <button type="button" aria-label={label}>
+    {icon}
+  </button>
+);
 ```
 
 ```jsonc
@@ -118,10 +131,10 @@ export const IconButton = ({ label, icon }) => <button type="button" aria-label=
 
 ## API
 
-| 関数 | 説明 |
-| --- | --- |
-| `convertPretendersToJsxA11ySettings(file)` | `PretendersFile` を `{ settings, skipped }` に変換する |
-| `scanForJsxA11y(options)` | `@markuplint/pretenders` の `scan` で解析し、上の関数で変換する |
+| 関数                                       | 説明                                                            |
+| ------------------------------------------ | --------------------------------------------------------------- |
+| `convertPretendersToJsxA11ySettings(file)` | `PretendersFile` を `{ settings, skipped }` に変換する          |
+| `scanForJsxA11y(options)`                  | `@markuplint/pretenders` の `scan` で解析し、上の関数で変換する |
 
 `skipped` は変換できなかった `{ selector, reason }` の一覧です。
 
