@@ -1,0 +1,55 @@
+{
+	"name": "markuplint-pretenders-to-jsx-a11y-configs",
+	"version": "0.1.0",
+	"description": "Convert markuplint pretenders scan results into jsx-a11y settings.components for ESLint and oxlint",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mehm8128/markuplint-pretenders-to-jsx-a11y-configs.git"
+	},
+	"homepage": "https://github.com/mehm8128/markuplint-pretenders-to-jsx-a11y-configs#readme",
+	"bugs": {
+		"url": "https://github.com/mehm8128/markuplint-pretenders-to-jsx-a11y-configs/issues"
+	},
+	"keywords": [
+		"markuplint",
+		"pretenders",
+		"jsx-a11y",
+		"eslint",
+		"oxlint",
+		"accessibility"
+	],
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
+	"bin": {
+		"markuplint-pretenders-to-jsx-a11y": "./dist/cli.js"
+	},
+	"files": [
+		"dist"
+	],
+	"engines": {
+		"node": ">=24"
+	},
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"typecheck": "tsc --noEmit",
+		"test": "node --test src/index.test.ts",
+		"prepack": "pnpm run build"
+	},
+	"devDependencies": {
+		"@markuplint/pretenders": "5.0.1",
+		"@types/node": "26.6.4",
+		"typescript": "7.0.2"
+	},
+	"packageManager": "pnpm@12.10.1",
+	"peerDependencies": {
+		"@markuplint/pretenders": "^5.0.1"
+	}
+}
